@@ -1,0 +1,1 @@
+fsafsdfsafssFile aFile = new RandomAccessFile("data/nio-data.txt", "rw");
