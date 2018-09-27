@@ -1,13 +1,15 @@
-package nettyguide.c21;
+package nettyguide.c22;
+
+import nettyguide.c21.TimeServerHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * 同步阻塞式I/O创建的TimeServer
+ * 伪异步I/O创建的TimeServer
  * @author duosheng
- * @since 2018/9/26
+ * @since 2018/9/27
  */
 public class TimeServer {
 
@@ -26,9 +28,11 @@ public class TimeServer {
             server = new ServerSocket(port);
             System.out.println("The time server is start in port: " + port);
             Socket socket;
+            // 创建I/0 任务线程池
+            TimeServerHandlerExecutePool singleExecutor = new TimeServerHandlerExecutePool(50, 10000);
             while (true) {
                 socket = server.accept();
-                new Thread(new TimeServerHandler(socket)).start();
+                singleExecutor.execute(new TimeServerHandler(socket));
             }
         } finally {
             if (server != null) {
@@ -37,5 +41,6 @@ public class TimeServer {
                 server = null;
             }
         }
+
     }
 }
