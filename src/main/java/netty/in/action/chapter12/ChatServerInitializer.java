@@ -1,4 +1,4 @@
-package netty4.chapter12;
+package netty.in.action.chapter12;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;

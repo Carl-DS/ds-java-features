@@ -1,4 +1,4 @@
-package netty4.chapter08;
+package netty.in.action.chapter08;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
