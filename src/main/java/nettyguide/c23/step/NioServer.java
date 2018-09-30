@@ -1,4 +1,4 @@
-package nettyguide.c23;
+package nettyguide.c23.step;
 
 import java.io.IOException;
 import java.net.InetAddress;
