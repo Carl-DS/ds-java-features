@@ -33,6 +33,7 @@ public class AsyncTimeClientHandler implements CompletionHandler<Void, AsyncTime
 
     @Override
     public void run() {
+        // 创建CountDownLatch 进行等待，防止异步操作没有执行完成线程就退出
         latch = new CountDownLatch(1);
         client.connect(new InetSocketAddress(host, port), this, this);
         try {
