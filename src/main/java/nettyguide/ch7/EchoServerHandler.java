@@ -11,12 +11,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 @ChannelHandler.Sharable
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
 
-    int counter = 0;
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("Server receive the msgpack message : " + msg);
-        ctx.write(msg);
+        UserInfo userInfo = (UserInfo) msg;
+        System.out.println("Server receive the msgpack message : " + userInfo);
+        ctx.writeAndFlush(userInfo);
     }
 
     @Override

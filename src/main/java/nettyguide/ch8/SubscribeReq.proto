@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+package netty;
+option java_package = "nettyguide.ch8";
+option java_outer_classname = "SubscribeReqProto";
+
+message SubscribeReq {
+    required int32 subReqId = 1;
+    required string username = 2;
+    required string productName = 3;
+    required string addressName = 4;
+}
