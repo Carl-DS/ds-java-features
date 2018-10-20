@@ -1,7 +1,5 @@
 package nettyguide.c24;
 
-import com.sun.beans.editors.ByteEditor;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;

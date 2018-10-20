@@ -1,6 +1,5 @@
 package nettyguide.ch8;
 
-import com.sun.xml.internal.txw2.TXW;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
