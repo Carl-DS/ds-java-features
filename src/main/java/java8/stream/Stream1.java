@@ -1,6 +1,7 @@
 package java8.stream;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -278,8 +279,8 @@ class Stream1 {
         IntStream.range(1, 4)
                 .mapToObj(i -> new Foo("Foo" + i))
                 .peek(f -> IntStream.range(1, 4)
-                            .mapToObj(i -> new Bar("Bar" + i + "<-" + f.name))
-                            .forEach(f.bars::add)
+                        .mapToObj(i -> new Bar("Bar" + i + "<-" + f.name))
+                        .forEach(f.bars::add)
                 )
                 .flatMap(f -> f.bars.stream())
                 .forEach(b -> System.out.println(b.name));
@@ -300,8 +301,104 @@ class Stream1 {
 
         // reduce操作将stream的所有元素合并到一个结果中
         // Java 8支持三种不同的reduce方法。第一种将stream中元素reduce为一个。
+        // 最年长的人:
+        persons.stream()
+                .reduce((p1, p2) -> p1.age > p2.age ? p1 : p2)
+                .ifPresent(System.out::println);
+
+        // 第二个reduce方法接受 实体值和BinaryOperator累加器,该方法可用于构建一个新的Person，它聚合来自于stream的其他人的的姓名和年龄:
+        Person result = persons.stream()
+                .reduce(new Person("", 0), (p1, p2) -> {
+                    p1.age += p2.age;
+                    p1.name += p2.name;
+                    return p1;
+                });
+        System.out.format("name=%s; age=%s\n", result.name, result.age);
+
+        // 第三种 reduce 方法接受三个参数:标识值、BiFunction累加器和BinaryOperator类型的组合函数。由于标识值类型并不局限于Person类型，所以我们可以确定所有人的年龄和:
+        Integer ageSum = persons
+                .stream()
+                .reduce(0,
+                        (sum, p) -> {
+                            System.out.format("accumulator: sum=%s; person=%s\n", sum, p);
+                            return sum += p.age;
+                        },
+                        (sum1, sum2) -> {
+                            System.out.format("combiner: sum1=%s; sum2=%s\n", sum1, sum2);
+                            return sum1 + sum2;
+                        });
+        System.out.println(ageSum);
+
+        // 并行执行此stream将产生完全不同的执行过程。现在这个combiner被调用了。由于accumulator是并行调用的，所以需要combiner来汇总分离的累计值。
+        persons.parallelStream()
+                .reduce(0, (sum, p) -> {
+                    System.out.format("accumulator: sum=%s; person=%s\n", sum, p);
+                    return sum += p.age;
+                }, (sum1, sum2) -> {
+                    System.out.format("combiner: sum1=%s; sum2=%s\n", sum1, sum2);
+                    return sum1 + sum2;
+                });
+
+        ForkJoinPool commonPool = ForkJoinPool.commonPool();
+        System.out.println("ForkJoinPool=> " + commonPool.getParallelism());
 
 
+        // 并行Stream
+        Arrays.asList("a1", "a2", "b1", "c2", "c1")
+                .parallelStream()
+                .filter(s -> {
+                    System.out.format("filter: %s [%s]\n", s, Thread.currentThread().getName());
+                    return true;
+                })
+                .map(s -> {
+                    System.out.format("map: %s [%s]\n", s, Thread.currentThread().getName());
+                    return s.toUpperCase();
+                })
+                .forEach(s -> System.out.format("forEach: %s [%s]\n", s, Thread.currentThread().getName()));
+
+        // 并行Stream 添加sort操作
+        // 可以发现：1，sort操作还是一个行式执行的操作，它会组合元素的向下传播。2，次数的 sort 操作似乎是只是一个线程中执行，而不会使用多线程并发执行？
+        // 实际上，并行 Stream 的 sort 操作会使用 Java 8 中的 Arrays.parallelSort() 方法，而该方法会更加需要 sort 的元素的个数的数量来决定是否使用多线程来执行。
+        // 如JavaDoc中所述，如果将按顺序或并行执行排序，则此方法将决定数组的长度：
+        //
+        // 如果指定数组的长度小于最小粒度，则使用适当的 Arrays.sort 方法对其进行排序。
+        Arrays.asList("a1", "a2", "b1", "c2", "c1")
+                .parallelStream()
+                .filter(s -> {
+                    System.out.format("filter: %s [%s]\n",
+                            s, Thread.currentThread().getName());
+                    return true;
+                })
+                .map(s -> {
+                    System.out.format("map: %s [%s]\n",
+                            s, Thread.currentThread().getName());
+                    return s.toUpperCase();
+                })
+                .sorted((s1, s2) -> {
+                    System.out.format("sort: %s <> %s [%s]\n",
+                            s1, s2, Thread.currentThread().getName());
+                    return s1.compareTo(s2);
+                })
+                .forEach(s -> System.out.format("forEach: %s [%s]\n",
+                        s, Thread.currentThread().getName()));
+
+        // 在我们 Reduce 部分的最后一段中，我们发现 组合函数只会被并行 Stream 所使用，而不会被顺序 Stream 所使用。
+        // 可以发现，累加器和组合器都会利用 ForkJoinPool 中的多个线程来执行。
+        // 可以发现，并行 Stream 会充分利用 ForkJoinPool 中的多个线程来执行操作，从而极大地调高程序的性能。
+        // 当然，我们还比较记住的一件事就是：并行 Stream 的某些操作，比如 reduce 和 collect 需要另外的操作参数来执行必要的合并操作，
+        // 而这些操作可能是顺序 Stream 所不需要的。
+        // 注意：细心的你可能发现了，所有的并行 Stream 是在分享同一个 JVM 范围内的通用 ForkJoinPool。
+        // 所以，你应该避免在并行 Stream 执行慢速的、阻塞性的操作，因为它们可能会减慢程序其他部分的执行速度和性能，
+        // 如果程序的其他部分也直接或者间接使用了 ForkJoinPool 的话。
+        persons.parallelStream()
+                .reduce(0, (sum, p) -> {
+                    System.out.format("accumulator: sum=%s; person=%s [%s]\n", sum, p, Thread.currentThread().getName());
+                    return sum += p.age;
+                }, (sum1, sum2) -> {
+                    System.out.format("combiner: sum1=%s; sum2=%s [%s]\n",
+                            sum1, sum2, Thread.currentThread().getName());
+                    return sum1 + sum2;
+                });
 
     }
 
