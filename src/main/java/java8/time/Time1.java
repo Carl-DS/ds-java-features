@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -29,5 +31,19 @@ public class Time1 {
     public void DateTimeFormatterTest() {
         DateTimeFormatter isoDateTime = DateTimeFormatter.ISO_DATE_TIME;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss E");
+        System.out.println(Instant.now());
+
+        //Format examples
+        LocalDate date = LocalDate.now();
+        //default format
+        System.out.println("Default format of LocalDate="+date);
+        //specific format
+        System.out.println(date.format(DateTimeFormatter.ofPattern("d::MMM::uuuu")));
+        System.out.println(date.format(DateTimeFormatter.BASIC_ISO_DATE));
+
+        DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneId.systemDefault());
+
+        System.out.println(DATE_TIME_FORMATTER.format(new Date().toInstant()));
     }
 }
