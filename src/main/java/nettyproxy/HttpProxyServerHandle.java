@@ -11,7 +11,6 @@ import io.netty.handler.codec.http.HttpVersion;
  * @author duosheng
  * @since 2018/12/25
  */
-@ChannelHandler.Sharable
 public class HttpProxyServerHandle extends ChannelInboundHandlerAdapter {
 
     private ChannelFuture cf;
