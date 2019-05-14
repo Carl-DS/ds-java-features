@@ -21,7 +21,7 @@ public class CommandTest {
 
         //阻塞方式执行
         String execute = commandPhone.execute();
-        LOGGER.info("execute=[{}]", execute);
+        LOGGER.info("execute=[{}]");
 
         //异步非阻塞方式
         Future<String> queue = command.queue();
