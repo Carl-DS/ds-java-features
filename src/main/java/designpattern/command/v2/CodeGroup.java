@@ -1,4 +1,6 @@
-package designpattern.command.v1;
+package designpattern.command.v2;
+
+import designpattern.command.v1.Group;
 
 /**
  * @author duosheng
