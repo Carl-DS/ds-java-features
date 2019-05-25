@@ -19,4 +19,9 @@ public abstract class Group {
 
     //被要求给出所有的变更计划
     public abstract void plan();
+
+    //每个接收者都要对直接执行的任务可以回滚
+    public void rollBack() {
+        //根据日志进行回滚
+    }
 }

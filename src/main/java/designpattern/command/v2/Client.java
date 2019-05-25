@@ -16,6 +16,8 @@ public class Client {
         Command command = new DeletePageCommand();
         //接头人接收到命令
         xiaoSan.setCommand(command);
+        Command cancelCommand = new CancelDeletePageCommand();
+        xiaoSan.setCommand(cancelCommand);
         //接头人执行命令
         xiaoSan.action();
     }
