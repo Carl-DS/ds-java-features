@@ -1,4 +1,6 @@
-package designpattern.adapter;
+package designpattern.adapter.v1;
+
+import designpattern.adapter.v1.IUserInfo;
 
 /**
  * @author duosheng

@@ -1,4 +1,4 @@
-package designpattern.adapter;
+package designpattern.adapter.v1;
 
 import java.util.HashMap;
 import java.util.Map;

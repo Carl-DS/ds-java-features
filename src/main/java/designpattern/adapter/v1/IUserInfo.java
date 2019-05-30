@@ -1,4 +1,4 @@
-package designpattern.adapter;
+package designpattern.adapter.v1;
 
 /**
  * @author duosheng
