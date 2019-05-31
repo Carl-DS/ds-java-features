@@ -35,7 +35,7 @@ public class NioServer {
     //     // 5. 多路复用器在线程run方法的无限循环体内轮询准备就绪的Key
     //     int num = selector.select();
     //     Set<SelectionKey> selectionKeys = selector.selectedKeys();
-    //     Iterator<SelectionKey> iterator = selectionKeys.iterator();
+    //     IProject<SelectionKey> iterator = selectionKeys.iterator();
     //     while (iterator.hasNext()) {
     //         SelectionKey next = iterator.next();
     //         // deal with I/O event...
