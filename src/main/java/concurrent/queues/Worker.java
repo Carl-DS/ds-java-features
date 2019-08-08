@@ -1,13 +1,14 @@
 package concurrent.queues;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author duosheng
  * @since 2019/8/5
  */
+@Slf4j
 public abstract class Worker implements Runnable {
     protected volatile boolean enable = true;
     protected String name;
@@ -20,6 +21,6 @@ public abstract class Worker implements Runnable {
 
     public void stop() {
         this.enable = false;
-        Logger.getLogger(Worker.class.getName()).log(Level.INFO, "Stop: " + name);
+        log.info("Stop:{}", name);
     }
 }

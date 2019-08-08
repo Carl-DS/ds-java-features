@@ -52,7 +52,6 @@ public class BlockVsWait {
         waitOnTake.setName("waitOnTake");
         waitOnTake.start();
 
-
         Thread waitOnPut = new Thread(() -> {
             try {
                 arrayBlockingQueue1.put(2);

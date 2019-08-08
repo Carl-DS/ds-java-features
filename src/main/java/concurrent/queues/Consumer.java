@@ -26,7 +26,8 @@ public class Consumer extends Worker {
     public void run() {
         while (enable || queue.size() > 0) {
             try {
-                Integer item = queue.take();
+                //Integer item = queue.take();
+                Integer item = queue.poll(1, TimeUnit.SECONDS);
                 log.info("size:{}, got:{}, enable:{}", queue.size(), item, enable);
                 if (!enable) {
                     totalConsumedAfterShutdown.incrementAndGet();
