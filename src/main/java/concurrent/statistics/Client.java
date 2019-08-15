@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,7 +19,8 @@ import java.util.stream.Stream;
 @Slf4j
 public class Client {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        long start = System.currentTimeMillis();
         TotalWords totalWords = new TotalWords();
         FilterProcessManager filterProcessManager = new FilterProcessManager(totalWords);
 
@@ -30,11 +32,14 @@ public class Client {
 
         for (ScannerFile.FileInfo fileInfo : allFile) {
             Stream<String> stringStream = Files.lines(Paths.get(fileInfo.getFilePath()), StandardCharsets.UTF_8);
+            TimeUnit.MILLISECONDS.sleep(200);
             List<String> collect = stringStream.collect(Collectors.toList());
             for (String msg : collect) {
                 filterProcessManager.process(msg);
             }
         }
-        log.info(filterProcessManager.toString());
+        long total = totalWords.total();
+        long end = System.currentTimeMillis();
+        log.info("total sum=[{}],[{}] ms", total, end - start);
     }
 }

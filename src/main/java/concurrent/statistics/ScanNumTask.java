@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +31,8 @@ public class ScanNumTask implements Runnable {
         Stream<String> stringStream = null;
         try {
             stringStream = Files.lines(Paths.get(path), StandardCharsets.UTF_8);
-        } catch (IOException e) {
+            TimeUnit.MILLISECONDS.sleep(200);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

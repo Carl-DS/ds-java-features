@@ -18,7 +18,7 @@ public class ConcurrentClient {
     public static void main(String[] args) throws InterruptedException {
         long start = System.currentTimeMillis();
         TotalWords totalWords = new TotalWords();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
         FilterProcessManager filterProcessManager = new FilterProcessManager(totalWords);
         // /home/lds/workspace/worklogs/使用Dockerfile构建Docker镜像.md
         ScannerFile scannerFile = new ScannerFile();
