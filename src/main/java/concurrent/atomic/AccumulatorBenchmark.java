@@ -16,6 +16,9 @@ import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
 /**
+ * 先来一把性能测试，对比一下AtomicLong（1.5出来的）、LongAdder（1.8出来的）和LongAccumulator（1.8出来的）用于简单累加的性能。
+ *
+ * 程序逻辑比较简单，可以看到我们在最大并发10的情况下，去做10亿次操作测试：
  * @author duosheng
  * @since 2019/8/23
  */
