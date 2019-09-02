@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -43,5 +44,40 @@ public class CopyOnWriteArrayListTest {
         IntStream.range(0, loopCount).parallel().forEach(__ -> synchronizedList.add(ThreadLocalRandom.current().nextInt(loopCount)));
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
+    }
+
+    /**
+     * 可见CopyOnWriteArrayList的修改因为涉及到整个数据的复制，代价相当大。
+     * 再来看看读，先使用一个方法来进行1000万数据填充，然后测试，迭代1亿次：
+     */
+    @Test
+    public void testRead() {
+        List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
+        List<Integer> arrayList = new ArrayList<>();
+        List<Integer> synchronizedList = Collections.synchronizedList(new ArrayList<>());
+        addAll(copyOnWriteArrayList);
+        addAll(arrayList);
+        addAll(synchronizedList);
+        StopWatch stopWatch = new StopWatch();
+        int loopCount = 100000000;
+        int count = arrayList.size();
+        stopWatch.start("copyOnWriteArrayList");
+        IntStream.rangeClosed(1, loopCount).parallel().forEach(__ -> copyOnWriteArrayList.get(ThreadLocalRandom.current().nextInt(count)));
+        stopWatch.stop();
+        stopWatch.start("arrayList");
+        IntStream.rangeClosed(1, loopCount).parallel().forEach(__ -> {
+            synchronized (arrayList) {
+                arrayList.get(ThreadLocalRandom.current().nextInt(count));
+            }
+        });
+        stopWatch.stop();
+        stopWatch.start("synchronizedList");
+        IntStream.range(0, loopCount).parallel().forEach(__ -> synchronizedList.get(ThreadLocalRandom.current().nextInt(count)));
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+    }
+
+    private void addAll(List<Integer> list) {
+        list.addAll(IntStream.rangeClosed(1, 10000000).boxed().collect(Collectors.toList()));
     }
 }
