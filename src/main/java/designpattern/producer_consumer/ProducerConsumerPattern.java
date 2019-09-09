@@ -1,4 +1,4 @@
-package concurrent;
+package designpattern.producer_consumer;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
