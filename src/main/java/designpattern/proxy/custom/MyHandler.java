@@ -1,4 +1,4 @@
-package designpattern.proxy;
+package designpattern.proxy.custom;
 
 import java.lang.reflect.Method;
 

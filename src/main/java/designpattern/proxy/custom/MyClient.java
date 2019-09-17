@@ -1,4 +1,4 @@
-package designpattern.proxy;
+package designpattern.proxy.custom;
 
 /**
  * @author duosheng
@@ -9,7 +9,7 @@ public class MyClient {
     public static void main(String[] args) throws Throwable {
         Man man = new Hong();
         MyHandler myHandler = new MyHandler(man);
-        Man proxyMan = (Man) MyProxy.newProxyInstance(new MyClassLoader("/home/lds/workspace/IdeaProjects/ds-java-features/src/main/java/designpattern/proxy", "designpattern.proxy"),
+        Man proxyMan = (Man) MyProxy.newProxyInstance(new MyClassLoader("/home/lds/workspace/IdeaProjects/ds-java-features/src/main/java/designpattern/proxy/custom", "designpattern.proxy.custom"),
                 Man.class, myHandler);
         System.out.println(proxyMan.getClass().getName());
         proxyMan.findObject();

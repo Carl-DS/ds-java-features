@@ -1,4 +1,4 @@
-package designpattern.proxy;
+package designpattern.proxy.custom;
 
 /**
  * @author duosheng

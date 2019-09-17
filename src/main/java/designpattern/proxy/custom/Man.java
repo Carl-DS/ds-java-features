@@ -1,4 +1,4 @@
-package designpattern.proxy;
+package designpattern.proxy.custom;
 
 /**
  * 业务接口
