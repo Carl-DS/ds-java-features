@@ -25,4 +25,14 @@ public class LRU<K, V> extends LinkedHashMap<K, V> {
         // 当 map 中的数据量大于指定的缓存个数的时候，就自动删除最老的数据
         return size() > CACHE_SIZE;
     }
+
+    public static void main(String[] args) {
+        LRU<Integer, String> lru = new LRU<>(3);
+        lru.put(1, "A");
+        lru.put(2, "B");
+        lru.put(3, "C");
+        lru.get(1);
+        lru.put(4, "D");
+        System.out.println(lru.keySet());
+    }
 }
